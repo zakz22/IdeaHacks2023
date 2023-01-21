@@ -34,12 +34,28 @@ const char* PARAM_INPUT_3 = "btn";
 String key = ""; // stores database entry key
 int val = 0;     // stores value on form or read from database
 
+//accelerometer stuff
+const int xAxis = 32;
+const int yAxis = 35;
+const int zAxis = 34;
+
+int x_acc;
+int y_acc;
+int z_acc;
+int mag;
+int mag_offset;
+
 // called if an invalid URL is requested
 void notFound(AsyncWebServerRequest *request) {
   request->send(404, "text/plain", "Not found");
 }
 
 void setup() {
+  // // setup pins
+  // pinMode(xAxis, INPUT);
+  // pinMode(yAxis, INPUT);
+  // pinMode(zAxis, INPUT);
+
   // start Serial connection
   Serial.begin(115200);
 
@@ -107,10 +123,24 @@ void setup() {
   // start Firebase connection
   Firebase.begin(&config, &auth);
   Firebase.reconnectWiFi(true);
+
+  x_acc = analogRead(xAxis);
+  y_acc = analogRead(yAxis);
+  z_acc = analogRead(zAxis);
+  mag_offset = sqrt(x_acc*x_acc + y_acc*y_acc +z_acc*z_acc);
 }
 
 void loop() {
-
+  // Serial.println(analogRead(yAxis));
+  // Serial.println(analogRead(zAxis));  
+  x_acc = analogRead(xAxis);
+  y_acc = analogRead(yAxis);
+  z_acc = analogRead(zAxis);
+  mag = sqrt(x_acc*x_acc + y_acc*y_acc +z_acc*z_acc) - mag_offset;
+  //Serial.println(mag_offset);
+  Serial.println(mag);
+  //int mag_offset = ;
+  delay(1000);
 }
 
 // reads value of entry with a given key
