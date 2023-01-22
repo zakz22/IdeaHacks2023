@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <steps.h>
+#include "led.h"
 //#include <WiFi.h>
 //#include <AsyncTCP.h>
 //#include <ESPAsyncWebSrv.h>
@@ -27,6 +28,7 @@ int mag_avg;
 int threshold;
 int counter = 10;
 
+Led led;
 
 steps::steps() {
   // // setup pins
@@ -66,6 +68,7 @@ void steps::run() {
 
   if (sum_prev > mag_sum + threshold) {
     m_steps++;
+    led.SetLeds();
     //Serial.println("+1");
     sum_prev= 0;
   }
