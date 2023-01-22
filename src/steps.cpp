@@ -71,8 +71,9 @@ void steps::run() {
     led.SetLeds();
     //Serial.println("+1");
     sum_prev= 0;
+  } else {
+      sum_prev = mag_sum;
   }
 
   //Serial.println(steps);
-  sum_prev = mag_sum;
 }
