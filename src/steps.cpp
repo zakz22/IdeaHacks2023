@@ -61,7 +61,6 @@ void steps::run() {
     z_acc = analogRead(zAxis);
     mag = sqrt(x_acc*x_acc + y_acc*y_acc + z_acc*z_acc);
     mag_sum = mag_sum + mag;
-    Serial.println("Magnitute " + mag_sum);
     //delay(1);
   }
 

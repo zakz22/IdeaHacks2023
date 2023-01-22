@@ -12,8 +12,8 @@
 #define WIFI_PASSWORD "Ilovesolder"
 
 // Firebase project API Key and URL here
-#define API_KEY "AIzaSyB-KixGYjdAPbbJMKj58F0BEUF_eum8HC0"
-#define DATABASE_URL "https://ideahacks2023-default-rtdb.firebaseio.com/" 
+#define API_KEY "AIzaSyBkShdJW2r4NVcwm1T0V78j65GhkWG5h7U"
+#define DATABASE_URL "https://my-application2-e42b8-default-rtdb.firebaseio.com/" 
 
 void handleNotFound(AsyncWebServerRequest *request);
 void handleWrite();
@@ -145,7 +145,7 @@ void handleWrite() {
   Serial.print(key);
   Serial.print(" in database");
   // Write an Int number on the database path given by key
-  if (!Firebase.RTDB.setInt(&fbdo, key, val)){
+  if (!Firebase.RTDB.setString(&fbdo, key, "PROBABLY WORKS?")){
     Serial.println(fbdo.errorReason());
   }
 }
