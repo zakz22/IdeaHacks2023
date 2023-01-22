@@ -1,4 +1,3 @@
-#include <Arduino.h>
 #include <WiFi.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebSrv.h>
@@ -6,6 +5,7 @@
 #include "Website.h"
 #include "addons/TokenHelper.h"
 #include "addons/RTDBHelper.h"
+#include "steps.h"
 
 // enter your network credentials
 #define WIFI_SSID "IEEE"
@@ -13,11 +13,14 @@
 
 // Firebase project API Key and URL here
 #define API_KEY "AIzaSyB-KixGYjdAPbbJMKj58F0BEUF_eum8HC0"
-#define DATABASE_URL "https://ideahacks2023-default-rtdb.firebaseio.com/"
+#define DATABASE_URL "https://ideahacks2023-default-rtdb.firebaseio.com/" 
 
 void handleNotFound(AsyncWebServerRequest *request);
-void handleRead();
 void handleWrite();
+void handleRead();
+
+//Steps
+steps s;
 
 //Define Firebase Data object
 FirebaseData fbdo;
@@ -34,28 +37,12 @@ const char* PARAM_INPUT_3 = "btn";
 String key = ""; // stores database entry key
 int val = 0;     // stores value on form or read from database
 
-//accelerometer stuff
-const int xAxis = 32;
-const int yAxis = 35;
-const int zAxis = 34;
-
-int x_acc;
-int y_acc;
-int z_acc;
-int mag;
-int mag_offset;
-
 // called if an invalid URL is requested
 void notFound(AsyncWebServerRequest *request) {
   request->send(404, "text/plain", "Not found");
 }
 
 void setup() {
-  // // setup pins
-  // pinMode(xAxis, INPUT);
-  // pinMode(yAxis, INPUT);
-  // pinMode(zAxis, INPUT);
-
   // start Serial connection
   Serial.begin(115200);
 
@@ -124,23 +111,13 @@ void setup() {
   Firebase.begin(&config, &auth);
   Firebase.reconnectWiFi(true);
 
-  x_acc = analogRead(xAxis);
-  y_acc = analogRead(yAxis);
-  z_acc = analogRead(zAxis);
-  mag_offset = sqrt(x_acc*x_acc + y_acc*y_acc +z_acc*z_acc);
+  Firebase.RTDB.setInt(&fbdo, "Steps", 0);
 }
 
 void loop() {
-  // Serial.println(analogRead(yAxis));
-  // Serial.println(analogRead(zAxis));  
-  x_acc = analogRead(xAxis);
-  y_acc = analogRead(yAxis);
-  z_acc = analogRead(zAxis);
-  mag = sqrt(x_acc*x_acc + y_acc*y_acc +z_acc*z_acc) - mag_offset;
-  //Serial.println(mag_offset);
-  Serial.println(mag);
-  //int mag_offset = ;
-  delay(1000);
+  Firebase.RTDB.setInt(&fbdo, "Steps", s.getSteps());
+  s.run();
+  delay(100);
 }
 
 // reads value of entry with a given key
